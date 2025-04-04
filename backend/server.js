@@ -1,11 +1,30 @@
 const express = require("express");
+const cors = require("cors");
+const dotenv = require("dotenv");
+const connectDB = require("./config/db");
+
+// Załaduj zmienne środowiskowe
+dotenv.config();
+
+// Połącz z bazą danych
+connectDB();
+
+// Inicjalizacja express
 const app = express();
-const PORT = process.env.PORT || 3001;
 
+// Middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+// Definicja routes
+app.use("/api/users", require("./routes/UserRoutes"));
+
+// Route do testowania
 app.get("/", (req, res) => {
-  res.send("testowanie tego dziadostwa");
+  res.send("API is running...");
 });
 
-app.listen(PORT, () => {
-  console.log(`Serwer działa na porcie ${PORT}`);
-});
+// Port i uruchomienie serwera
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

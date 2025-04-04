@@ -11,6 +11,8 @@ services:
     command: npm run dev
     ports:
       - "3001:3001"
+    depends_on:
+      - db
 
   frontend:
     build: ./apps/frontend
@@ -23,4 +25,15 @@ services:
       - CHOKIDAR_USEPOLLING=true       
       - WDS_SOCKET_PORT=3000           
     stdin_open: true                   
-    tty: true                          
+    tty: true             
+  db:
+    image: mongo
+    container_name: mongo_db
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:       
