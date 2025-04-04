@@ -1,23 +1,26 @@
-version: "3.8"
+version: '3.8'
 
 services:
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    ports:
-      - "3001:3001"
+    build: ./backend
     volumes:
       - ./backend:/app
       - /app/node_modules
     environment:
       - NODE_ENV=development
+    command: npm run dev
+    ports:
+      - "3001:3001"
 
   frontend:
-    build:
-      context: ./apps/frontend
-      dockerfile: Dockerfile
+    build: ./apps/frontend
+    volumes:
+      - ./apps/frontend:/app           
+      - /app/node_modules              
     ports:
-      - "3000:80"
-    depends_on:
-      - backend
+      - "3000:3000"                    
+    environment:
+      - CHOKIDAR_USEPOLLING=true       
+      - WDS_SOCKET_PORT=3000           
+    stdin_open: true                   
+    tty: true                          
