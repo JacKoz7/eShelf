@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { AuthContext } from '../App';
+// import { AuthContext } from '../App';
 
 function Registration() {
   const [email, setEmail] = useState('');
@@ -11,7 +11,7 @@ function Registration() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const { setAuthState } = useContext(AuthContext);
+//   const { setAuthState } = useContext(AuthContext);
   const navigate = useNavigate();
 
   // Funkcja walidująca email
