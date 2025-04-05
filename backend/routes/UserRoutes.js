@@ -7,7 +7,8 @@ const {
   getAllUsers, 
   getLoggedInUsers, 
   deleteUser, 
-  updateUser 
+  updateUser,
+  verifyToken
 } = require('../controllers/UserController');
 const { validateToken } = require('../middleware/AuthMiddleware');
 
@@ -22,5 +23,6 @@ router.get('/', validateToken, getAllUsers);
 router.get('/logged', validateToken, getLoggedInUsers);
 router.delete('/:id', validateToken, deleteUser);
 router.put('/:id', validateToken, updateUser);
+router.get('/verify', validateToken, verifyToken);
 
 module.exports = router;

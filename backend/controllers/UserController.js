@@ -25,13 +25,13 @@ const registerUser = async (req, res) => {
     const user = await User.create({
       email,
       password,
-      isLoggedIn: true, // Automatycznie zalogowany po rejestracji
     });
 
     if (user) {
       res.status(201).json({
         _id: user._id,
         email: user.email,
+        password: user.password,
         accessToken: generateToken(user._id),
       });
     } else {
@@ -61,6 +61,7 @@ const loginUser = async (req, res) => {
       res.json({
         _id: user._id,
         email: user.email,
+        password: user.password,
         accessToken: generateToken(user._id),
       });
     } else {
@@ -168,6 +169,31 @@ const updateUser = async (req, res) => {
   }
 };
 
+// @desc    Weryfikacja tokenu
+// @route   GET /api/users/verify
+// @access  Private
+const verifyToken = async (req, res) => {
+  try {
+    // Token jest już weryfikowany przez middleware validateToken
+    // Zwracamy dane użytkownika
+    const user = await User.findById(req.user.id);
+    
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    res.json({
+      id: user._id,
+      email: user.email,
+      isLoggedIn: user.isLoggedIn
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+// Dodaj ten endpoint do eksportowanych funkcji:
 module.exports = {
   registerUser,
   loginUser,
@@ -175,5 +201,6 @@ module.exports = {
   getAllUsers,
   getLoggedInUsers,
   deleteUser,
-  updateUser
+  updateUser,
+  verifyToken
 };
