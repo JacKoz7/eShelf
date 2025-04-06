@@ -19,6 +19,7 @@ app.use(express.urlencoded({ extended: false }));
 
 // Definicja routes
 app.use("/api/users", require("./routes/UserRoutes"));
+app.use('/api/books', require("./routes/BookRoutes"));
 
 // Route do testowania
 app.get("/", (req, res) => {
