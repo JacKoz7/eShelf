@@ -1,26 +1,63 @@
-import React, { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { AuthContext } from '../App';
 
-function Dashboard() {
-  const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
-  const [publishYear, setPublishYear] = useState('');
-  const [isbn, setIsbn] = useState('');
-  const [description, setDescription] = useState('');
-  const [status, setStatus] = useState('to-read');
+const stripHtml = (html) => {
+    const tmp = document.createElement("div");
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || "";
+  };
+
+function EditBook() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { authState } = useContext(AuthContext);
+  
+  const [bookData, setBookData] = useState({
+    title: '',
+    author: '',
+    publishYear: '',
+    ISBN: '',
+    description: '',
+    status: 'to-read'
+  });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchBook = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3001/api/books/${id}`, {
+          headers: {
+            'accessToken': localStorage.getItem('accessToken')
+          }
+        });
+        
+        const book = response.data;
+        setBookData({
+          title: book.title,
+          author: Array.isArray(book.author) ? book.author.join(', ') : book.author,
+          publishYear: book.publishYear || '',
+          ISBN: book.ISBN || '',
+          description: book.description || '',
+          status: book.status || 'to-read'
+        });
+      } catch (error) {
+        toast.error('Nie udało się załadować książki');
+        navigate('/userbooks');
+      }
+    };
+
+    fetchBook();
+  }, [id, navigate]);
 
   const validateForm = () => {
     const newErrors = {};
-
-    if (!title.trim()) newErrors.title = 'Tytuł jest wymagany';
-    if (!author.trim()) newErrors.author = 'Autor jest wymagany';
-
+    if (!bookData.title.trim()) newErrors.title = 'Tytuł jest wymagany';
+    if (!bookData.author.trim()) newErrors.author = 'Autor jest wymagany';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -32,81 +69,61 @@ function Dashboard() {
     setIsLoading(true);
 
     try {
-      // Przygotuj dane do wysłania
-      const bookData = {
-        title,
-        author: author.split(',').map(a => a.trim()), // Konwertuj string autorów na tablicę
-        publishYear: publishYear ? parseInt(publishYear) : undefined,
-        ISBN: isbn,
-        description,
-        status
-      };
-
-      // Wysłanie danych do API
-      const response = await axios.post('http://localhost:3001/api/books', bookData, {
-        headers: {
-          'accessToken': localStorage.getItem('accessToken')
+      const response = await axios.put(
+        `http://localhost:3001/api/books/${id}`,
+        {
+          title: bookData.title,
+          author: bookData.author.split(',').map(a => a.trim()),
+          publishYear: bookData.publishYear ? parseInt(bookData.publishYear) : undefined,
+          ISBN: bookData.ISBN,
+          description: bookData.description,
+          status: bookData.status
+        },
+        {
+          headers: {
+            'accessToken': localStorage.getItem('accessToken')
+          }
         }
-      });
+      );
 
-      // Obsługa sukcesu
-      toast.success('Książka została dodana pomyślnie!');
-      
-      // Opcjonalne przekierowanie lub reset formularza
+      toast.success('Książka została zaktualizowana!');
       setTimeout(() => {
-        setTitle('');
-        setAuthor('');
-        setPublishYear('');
-        setIsbn('');
-        setDescription('');
-        setStatus('to-read');
-      }, 2000);
-
+        navigate('/userbooks');
+      }, 1500);
     } catch (error) {
-      // Obsługa błędów
       if (error.response && error.response.data.message) {
         toast.error(error.response.data.message);
       } else {
-        toast.error('Wystąpił błąd podczas dodawania książki');
+        toast.error('Wystąpił błąd podczas aktualizacji książki');
       }
     } finally {
       setIsLoading(false);
     }
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setBookData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-white py-10">
       <ToastContainer />
       <div className="w-full max-w-2xl p-8 border border-gray-300 rounded-lg shadow-md bg-white">
-        <h2 className="text-2xl font-bold mb-6 text-center text-black">Dodaj książkę</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center text-black">Edytuj książkę</h2>
 
-        {/* Wyszukiwarka */}
-        <div className="mb-6">
-          <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-1">Wyszukaj książkę</label>
-          <div className="flex gap-2">
-            <input
-              id="search"
-              type="text"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black"
-              placeholder="Tytuł"
-            />
-            <button
-              className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800"
-            >
-              Wyszukaj
-            </button>
-          </div>
-        </div>
-
-        {/* Formularz dodawania */}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">Tytuł*</label>
             <input
               id="title"
+              name="title"
               type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              value={bookData.title}
+              onChange={handleChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black"
               required
             />
@@ -117,9 +134,10 @@ function Dashboard() {
             <label htmlFor="author" className="block text-sm font-medium text-gray-700 mb-1">Autor* (oddziel przecinkiem dla wielu autorów)</label>
             <input
               id="author"
+              name="author"
               type="text"
-              value={author}
-              onChange={(e) => setAuthor(e.target.value)}
+              value={bookData.author}
+              onChange={handleChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black"
               required
             />
@@ -130,20 +148,22 @@ function Dashboard() {
             <label htmlFor="publishYear" className="block text-sm font-medium text-gray-700 mb-1">Rok publikacji</label>
             <input
               id="publishYear"
+              name="publishYear"
               type="number"
-              value={publishYear}
-              onChange={(e) => setPublishYear(e.target.value)}
+              value={bookData.publishYear}
+              onChange={handleChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black"
             />
           </div>
 
           <div className="mb-4">
-            <label htmlFor="isbn" className="block text-sm font-medium text-gray-700 mb-1">ISBN</label>
+            <label htmlFor="ISBN" className="block text-sm font-medium text-gray-700 mb-1">ISBN</label>
             <input
-              id="isbn"
+              id="ISBN"
+              name="ISBN"
               type="text"
-              value={isbn}
-              onChange={(e) => setIsbn(e.target.value)}
+              value={bookData.ISBN}
+              onChange={handleChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black"
             />
           </div>
@@ -152,8 +172,9 @@ function Dashboard() {
             <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">Opis</label>
             <textarea
               id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              name="description"
+              value={stripHtml(bookData.description)}
+              onChange={handleChange}
               rows="4"
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black"
             ></textarea>
@@ -163,8 +184,9 @@ function Dashboard() {
             <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">Status</label>
             <select
               id="status"
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
+              name="status"
+              value={bookData.status}
+              onChange={handleChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black"
             >
               <option value="to-read">Do przeczytania</option>
@@ -181,33 +203,20 @@ function Dashboard() {
               disabled={isLoading}
               className="w-full py-2 px-4 bg-black text-white font-medium rounded-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 disabled:opacity-50"
             >
-              {isLoading ? 'Dodawanie...' : 'Dodaj do kolekcji'}
+              {isLoading ? 'Zapisywanie...' : 'Zapisz zmiany'}
             </button>
             <button
               type="button"
-              onClick={() => navigate('/')}
+              onClick={() => navigate('/userbooks')}
               className="w-full py-2 px-4 bg-white text-black border border-black font-medium rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500"
             >
               Anuluj
             </button>
           </div>
         </form>
-
-        {/* Import przyciski */}
-        <div className="flex flex-col md:flex-row gap-3 mt-6 justify-between">
-          <button className="w-full py-2 px-4 bg-gray-100 text-black border border-gray-300 rounded-md hover:bg-gray-200">
-            Importuj z pliku JSON
-          </button>
-          <button className="w-full py-2 px-4 bg-gray-100 text-black border border-gray-300 rounded-md hover:bg-gray-200">
-            Importuj z pliku XML
-          </button>
-          <button className="w-full py-2 px-4 bg-gray-100 text-black border border-gray-300 rounded-md hover:bg-gray-200">
-            Importuj z pliku YAML
-          </button>
-        </div>
       </div>
     </div>
   );
 }
 
-export default Dashboard;
+export default EditBook;

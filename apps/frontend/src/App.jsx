@@ -10,6 +10,7 @@ import {
 import Registration from "./pages/Registration";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
+import EditBook from "./pages/EditBook";
 import axios from "axios";
 import "./App.css";
 import UserBooks from "./pages/UserBooks";
@@ -154,6 +155,10 @@ function AppContent() {
         <Route
           path="/userbooks"
           element={authState.status ? <UserBooks /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/edit-book/:id"
+          element={authState.status ? <EditBook /> : <Navigate to="/login" />}
         />
         <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
