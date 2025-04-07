@@ -32,6 +32,12 @@
   color: #61dafb;
 }
 
+.scroll-animate {
+  animation: appear 5s linear;
+  animation-timeline: view();
+  animation-range: entry 0% cover 40%;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -40,3 +46,4 @@
     transform: rotate(360deg);
   }
 }
+

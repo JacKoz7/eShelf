@@ -1,9 +1,8 @@
-import React, { useState, useContext, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { AuthContext } from "../App";
 import { parseBookJson, validateBooks } from "../helpers/handleJson";
 import { parseBookXml } from "../helpers/handleXml";
 import { parseBookYaml } from "../helpers/handleYaml";
@@ -24,8 +23,6 @@ function Dashboard() {
   const [dragActive, setDragActive] = useState(false);
   const [importDialogOpen, setImportDialogOpen] = useState(false);
   const [booksToImport, setBooksToImport] = useState([]);
-  const [importType, setImportType] = useState(null);
-  const { authState } = useContext(AuthContext);
   const navigate = useNavigate();
 
   // Funkcja do obsługi przeciągania plików
@@ -40,78 +37,35 @@ function Dashboard() {
     }
   }, []);
 
-  const handleDrop = useCallback((e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
-
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      const file = e.dataTransfer.files[0];
-      if (file.type === "application/json" || file.name.endsWith(".json")) {
-        setImportType("json");
-        handleFileImport(file);
-      } else if (
-        file.type === "application/xml" ||
-        file.name.endsWith(".xml")
-      ) {
-        setImportType("xml");
-        handleFileImport(file);
-      } else if (
-        file.type === "application/yaml" ||
-        file.name.endsWith(".yaml") ||
-        file.name.endsWith(".yml")
-      ) {
-        setImportType("yaml");
-        handleFileImport(file);
-      } else {
-        toast.error("Proszę wybrać plik JSON, XML lub YAML");
-      }
-    }
-  }, []);
-
-  // Funkcja do obsługi wyboru pliku XML przez przycisk
-  const handleXmlFileSelect = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      setImportType("xml");
-      handleFileImport(e.target.files[0]);
-      e.target.value = ""; // Reset inputa
-    }
-  };
-
-  const handleYamlFileSelect = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      setImportType("yaml");
-      handleFileImport(e.target.files[0]);
-      e.target.value = ""; // Reset inputa
-    }
-  };
-
-  // Funkcja do obsługi wyboru pliku przez przycisk
-  const handleFileSelect = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      handleFileImport(e.target.files[0]);
-      e.target.value = ""; // Reset inputa
-    }
-  };
-
   const handleFileImport = (file) => {
     const reader = new FileReader();
     reader.onload = (e) => {
       try {
         let books;
-        switch (importType) {
-          case "json":
-            books = parseBookJson(e.target.result);
-            break;
-          case "xml":
-            books = parseBookXml(e.target.result);
-            break;
-          case "yaml":
-            books = parseBookYaml(e.target.result);
-            break;
-          default:
-            throw new Error("Nieznany typ pliku");
+        const fileName = file.name.toLowerCase();
+        let fileType;
+
+        // Określ typ pliku na podstawie rozszerzenia lub MIME
+        if (fileName.endsWith(".json") || file.type === "application/json") {
+          fileType = "json";
+          books = parseBookJson(e.target.result);
+        } else if (
+          fileName.endsWith(".xml") ||
+          file.type === "application/xml"
+        ) {
+          fileType = "xml";
+          books = parseBookXml(e.target.result);
+        } else if (
+          fileName.endsWith(".yaml") ||
+          fileName.endsWith(".yml") ||
+          file.type === "application/yaml"
+        ) {
+          fileType = "yml";
+          books = parseBookYaml(e.target.result);
+        } else {
+          throw new Error("Proszę wybrać plik JSON, XML lub YAML");
         }
+
         const validatedBooks = validateBooks(books);
         setBooksToImport(validatedBooks);
         setImportDialogOpen(true);
@@ -121,6 +75,37 @@ function Dashboard() {
     };
     reader.readAsText(file);
   };
+
+  const handleFileSelect = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      handleFileImport(e.target.files[0]);
+      e.target.value = ""; // Reset inputa
+    }
+  };
+
+  const handleXmlFileSelect = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      handleFileImport(e.target.files[0]);
+      e.target.value = ""; // Reset inputa
+    }
+  };
+
+  const handleYamlFileSelect = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      handleFileImport(e.target.files[0]);
+      e.target.value = ""; // Reset inputa
+    }
+  };
+
+  const handleDrop = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+  
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      handleFileImport(e.dataTransfer.files[0]);
+    }
+  }, []);
 
   // Funkcja do zapisywania zaimportowanych książek
   const saveImportedBooks = async () => {

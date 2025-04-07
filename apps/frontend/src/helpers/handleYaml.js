@@ -1,14 +1,13 @@
-import * as yaml from 'yaml'; // lub inna biblioteka do parsowania YAML
+import * as yaml from 'yaml'; // 
 
 export const parseBookYaml = (yamlString) => {
   try {
     const data = yaml.parse(yamlString);
     
-    // Obsługa różnych formatów plików YAML
     if (Array.isArray(data)) {
-      return data; // Jeśli plik zawiera bezpośrednio tablicę książek
+      return data; 
     } else if (data.books && Array.isArray(data.books)) {
-      return data.books; // Jeśli książki są w polu 'books'
+      return data.books; 
     }
     
     throw new Error('Nieprawidłowy format pliku YAML');
