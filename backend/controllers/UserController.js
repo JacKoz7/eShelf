@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const Book = require('../models/Book');
 
 // Generowanie JWT tokenu
 const generateToken = (id) => {
@@ -127,8 +128,12 @@ const deleteUser = async (req, res) => {
     const user = await User.findById(req.params.id);
     
     if (user) {
+      // Usuń książki przypisane do użytkownika
+      await Book.deleteMany({ userId: user._id });
+
+      // Usuń użytkownika
       await User.deleteOne({ _id: user._id });
-      res.json({ message: 'User removed' });
+      res.json({ message: 'User and associated books removed' });
     } else {
       res.status(404).json({ message: 'User not found' });
     }
