@@ -1,26 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <books>
   <book>
-    <title>Harry Potter: Cały Zbiór Powieści (1-7)</title>
-    <author>J.K. Rowling</author>
-    <publishYear>2023</publishYear>
-    <ISBN>9781789392487</ISBN>
-    <description>&lt;p&gt;Kiedy Harry Potter jako dziecko zostaje pozostawiony na progu, nie miał pojęcia, że jest Chłopcem, Który Przeżył, ani że jest sławny w całym świecie czarodziejstwa. Kiedy kilka lat później otrzymuje list ze Szkoły Magii i Czarodziejstwa w Hogwarcie, jest zaskoczony i wkrótce rozpoczyna magiczną przygodę, jakiej jeszcze nie było. Dołącz do Harry'ego i jego prawdziwie lojalnych przyjaciół, Hermiony i Rona, w historii o mocy prawdy, miłości i nadziei.&lt;br&gt;&lt;br&gt;Stając się klasyką naszych czasów, eBooki o Harrym Potterze nigdy nie zawiodą i przynoszą pocieszenie i upragnioną ucieczkę. Ich przesłanie o nadziei, przynależności i trwałej potędze prawdy i miłości, historia Chłopca, Który Przeżył, dalej zachwyca pokolenia nowych czytelników.&lt;/p&gt;</description>
-    <status>reading</status>
-  </book>
-  <book>
-    <title>Lalka</title>
-    <author>Bolesław Prus</author>
-    <publishYear>2024</publishYear>
-    <ISBN>9788379915576</ISBN>
-    <description>Nieśmiertelny klasyk literatury w nowoczesnej formie ebooka. Pobierz go już dziś na swój podręczny czytnik i ciesz się lekturą!</description>
+    <title>Harry Potter</title>
+    <authors>
+      <author>S. Gunelius</author>
+    </authors>
+    <publishYear>2008</publishYear>
+    <ISBN>9780230594104</ISBN>
+    <description>The Harry Potter books are the bestselling books of all time. In this fascinating study, Susan Gunelius analyzes every aspect of the brand phenomenon that is Harry Potter. Delving into price wars, box office revenue, and brand values, amongst other things, this is the story of the most incredible brand success there has ever been.</description>
     <status>to-read</status>
   </book>
   <book>
-    <title>Mój Pierwszy Koń</title>
-    <author>Paweł Radwan</author>
-    <publishYear>2019</publishYear>
+    <title>Mały Książę</title>
+    <authors>
+      <author>Antoine de Saint-Exupéry</author>
+    </authors>
+    <publishYear>2016</publishYear>
+    <ISBN>9788377915127</ISBN>
+    <description></description>
+    <status>reading</status>
+  </book>
+  <book>
+    <title>Dziady</title>
+    <authors>
+      <author>Adam Mickiewicz</author>
+    </authors>
+    <publishYear>1886</publishYear>
     <ISBN></ISBN>
-    <description>Zbyt dużo na tym świecie jest niewłaściwych koni [...] Brzmi brutalnie? Tak właśnie jest.</description>
-    <status>read</status>
+    <description></description>
+    <status>reading</status>
+  </book>
+  <book>
+    <title>Pan Tadeusz</title>
+    <authors>
+      <author>Adam Mickiewicz</author>
+    </authors>
+    <publishYear>2018</publishYear>
+    <ISBN>9788726090420</ISBN>
+    <description>&quot;Pan Tadeusz&quot; to arcydzieło polskiej literatury, określany mianem epopei narodowej. Dwanaście ksiąg w mistrzowski sposób przedstawia polskie krajobrazy i zwyczaje, tradycję narodowej kultury i siłę dążeń niepodległościowych początku XIX wieku. Soplicowski dworek jest sielankową ostoją polskiego patriotyzmu. Mickiewicz doskonale łączy wątki polityczne z obyczajowymi. Humoru dodają miłosne perypetie Telimeny, zaś przemiana Jacka Soplicy stała się wzorem do naśladowania przez kolejnych twórców romantycznych. Mickiewicz snuje przed czytelnikami wizję wyidealizowanej, dawnej Polski, pełnej siły i wigoru, zasłuchanej w nadzwyczajny koncert Jankiela. Adam Mickiewicz (1798-1855) - wybitny polski pisarz-wizjoner, obok Juliusza Słowackiego i Zygmunta Krasińskiego określany jako wieszcz narodowy. Był twórcą poetyckim, dramatycznym i prozatorskim. Aktywnie działał na arenie politycznej. Mickiewicz był członkiem i założycielem Towarzystwa Filomatycznego oraz oddanym mesjanistą związany z Kołem Sprawy Bożej Andrzeja Towiańskiego. Do jego najważniejszych dzieł należą zbiory poezji: &quot;Ballady i romanse&quot;, &quot;Sonety Krymskie&quot;, poemat &quot;Konrad Wallenrod&quot;, dramat &quot;Dziady&quot; i epopeja narodowa &quot;Pan Tadeusz&quot;. Dramaty Mickiewicza w całej Europie porównywano do dzieł Byrona i Goethego.</description>
+    <status>to-read</status>
   </book>
 </books>
