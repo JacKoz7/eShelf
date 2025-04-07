@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { AuthContext } from '../App';
 
 function Dashboard() {
   const [title, setTitle] = useState('');
@@ -11,18 +12,51 @@ function Dashboard() {
   const [isbn, setIsbn] = useState('');
   const [description, setDescription] = useState('');
   const [status, setStatus] = useState('to-read');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [showResults, setShowResults] = useState(false);
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
   const navigate = useNavigate();
 
   const validateForm = () => {
     const newErrors = {};
-
     if (!title.trim()) newErrors.title = 'Tytuł jest wymagany';
     if (!author.trim()) newErrors.author = 'Autor jest wymagany';
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) return;
+
+    setIsSearching(true);
+    try {
+      const response = await axios.get(`http://localhost:3001/api/books/search/${encodeURIComponent(searchQuery)}`, {
+        headers: {
+          'accessToken': localStorage.getItem('accessToken')
+        }
+      });
+      setSearchResults(response.data);
+      setShowResults(true);
+    } catch (error) {
+      toast.error('Wystąpił błąd podczas wyszukiwania');
+      console.error('Search error:', error);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const selectBook = (book) => {
+    setTitle(book.title);
+    setAuthor(Array.isArray(book.author) ? book.author.join(', ') : book.author);
+    setPublishYear(book.publishYear || '');
+    setIsbn(book.ISBN || '');
+    setDescription(book.description || '');
+    setShowResults(false);
+    setSearchQuery('');
   };
 
   const handleSubmit = async (e) => {
@@ -30,29 +64,23 @@ function Dashboard() {
     if (!validateForm()) return;
 
     setIsLoading(true);
-
     try {
-      // Przygotuj dane do wysłania
       const bookData = {
         title,
-        author: author.split(',').map(a => a.trim()), // Konwertuj string autorów na tablicę
+        author: author.split(',').map(a => a.trim()),
         publishYear: publishYear ? parseInt(publishYear) : undefined,
         ISBN: isbn,
         description,
         status
       };
 
-      // Wysłanie danych do API
       const response = await axios.post('http://localhost:3001/api/books', bookData, {
         headers: {
           'accessToken': localStorage.getItem('accessToken')
         }
       });
 
-      // Obsługa sukcesu
       toast.success('Książka została dodana pomyślnie!');
-      
-      // Opcjonalne przekierowanie lub reset formularza
       setTimeout(() => {
         setTitle('');
         setAuthor('');
@@ -61,10 +89,8 @@ function Dashboard() {
         setDescription('');
         setStatus('to-read');
       }, 2000);
-
     } catch (error) {
-      // Obsługa błędów
-      if (error.response && error.response.data.message) {
+      if (error.response?.data?.message) {
         toast.error(error.response.data.message);
       } else {
         toast.error('Wystąpił błąd podczas dodawania książki');
@@ -83,19 +109,55 @@ function Dashboard() {
         {/* Wyszukiwarka */}
         <div className="mb-6">
           <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-1">Wyszukaj książkę</label>
-          <div className="flex gap-2">
+          <form onSubmit={handleSearch} className="flex gap-2">
             <input
               id="search"
               type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black"
               placeholder="Tytuł"
             />
             <button
-              className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800"
+              type="submit"
+              disabled={isSearching}
+              className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 disabled:opacity-50"
             >
-              Wyszukaj
+              {isSearching ? 'Szukam...' : 'Wyszukaj'}
             </button>
-          </div>
+          </form>
+          
+          {/* Wyniki wyszukiwania */}
+          {showResults && (
+            <div className="mt-2 border border-gray-200 rounded-md max-h-60 overflow-y-auto">
+              {searchResults.length > 0 ? (
+                <ul className="divide-y divide-gray-200">
+                  {searchResults.map((book) => (
+                    <li key={book.googleId} className="p-2 hover:bg-gray-50 cursor-pointer">
+                      <div onClick={() => selectBook(book)} className="flex items-center">
+                        {book.thumbnail && (
+                          <img 
+                            src={book.thumbnail} 
+                            alt={book.title} 
+                            className="w-10 h-14 object-cover mr-3"
+                          />
+                        )}
+                        <div>
+                          <p className="font-medium text-gray-900">{book.title}</p>
+                          <p className="text-sm text-gray-600">
+                            {Array.isArray(book.author) ? book.author.join(', ') : book.author}
+                            {book.publishYear && ` (${book.publishYear})`}
+                          </p>
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="p-2 text-gray-500">Nie znaleziono książek</p>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Formularz dodawania */}
