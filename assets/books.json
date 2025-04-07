@@ -1,0 +1,29 @@
+{
+    "books": [
+      {
+        "title": "Harry Potter: Cały Zbiór Powieści (1-7)",
+        "author": ["J.K. Rowling"],
+        "publishYear": 2023,
+        "ISBN": "9781789392487",
+        "description": "<p>Kiedy Harry Potter jako dziecko zostaje pozostawiony na progu, nie miał pojęcia, że jest Chłopcem, Który Przeżył, ani że jest sławny w całym świecie czarodziejstwa. Kiedy kilka lat później otrzymuje list ze Szkoły Magii i Czarodziejstwa w Hogwarcie, jest zaskoczony i wkrótce rozpoczyna magiczną przygodę, jakiej jeszcze nie było. Dołącz do Harry'ego i jego prawdziwie lojalnych przyjaciół, Hermiony i Rona, w historii o mocy prawdy, miłości i nadziei.<br><br>Stając się klasyką naszych czasów, eBooki o Harrym Potterze nigdy nie zawiodą i przynoszą pocieszenie i upragnioną ucieczkę. Ich przesłanie o nadziei, przynależności i trwałej potędze prawdy i miłości, historia Chłopca, Który Przeżył, dalej zachwyca pokolenia nowych czytelników.</p>",
+        "status": "reading"
+      },
+      {
+        "title": "Lalka",
+        "author": ["Bolesław Prus"],
+        "publishYear": 2024,
+        "ISBN": "9788379915576",
+        "description": "Nieśmiertelny klasyk literatury w nowoczesnej formie ebooka. Pobierz go już dziś na swój podręczny czytnik i ciesz się lekturą!",
+        "status": "to-read"
+      },
+      {
+        "title": "Mój Pierwszy Koń",
+        "author": ["Paweł Radwan"],
+        "publishYear": 2019,
+        "ISBN": "",
+        "description": "Zbyt dużo na tym świecie jest niewłaściwych koni w rękach nieodpowiednich właścicieli. Większość ludzi związanych ze światem jeździeckim praktycznie w każdej stajni dostrzeże z bólem serca mieszankę złych cech w parze koń-właściciel. Problem zaczyna się, jak zawsze, od właścicieli koni, którzy kupili konia, nie będąc na niego właściwie przygotowanym. Czasami było to chwilowe zauroczenie jeździectwem, które tak szybko, jak się pojawiło, tak szybko zniknęło. Często była to także sytuacja finansowa, która przerosła nowych właścicieli. Nie była na tyle stabilna, aby decydować się na kopytny obowiązek. Czasami chodzi o niedopasowanie charakterów, z czego rodzą się frustracje. Często także zdarza się, że ludzie kupują chore konie. Osoby, które wydają tysiące złotych, nie robią podstawowych badań. To widać na każdym kroku. Często też nowy właściciel zakocha się od pierwszego wejrzenia w oglądanym koniku. Cóż z tego, że koń nie jest dopasowany wzrostem. Cóż z tego, że rusza się tak, jakby każda jego noga żyła innym, niezależnym życiem. Cóż z tego, że jest w „typie ujeżdżeniowym” i potyka się o każdy drąg, gdy potrzebujemy konia do skoków. Cóż z tego, że koń temperamentem i charakterem nie odpowiada danemu jeźdźcowi. Przecież ma takie śliczne skarpetki, latarnię i zapleciony ogonek. A do tego bajeczne umaszczenie. Takie sytuacje obserwujemy na każdym kroku. Nie ma stajni, jakiej byśmy nie odwiedzili, w której nie znajdziemy takiego konia albo takiego jeźdźca. Dlatego właśnie powstała ta książka. Aby uświadamiać przyszłych właścicieli koni, pomagać im podejmować świadome decyzje o zakupie tego zwierzęcia i wzięciu na siebie półtonowego obowiązku. I do tych osób kierowana jest niniejsza publikacja. Dla ludzi, którzy kupują swojego pierwszego konia. Aby poprowadzić za rękę przez wszystkie procedury i aby uzmysławiać, z czym to się wiąże. A przede wszystkim, aby studzić emocje, bo decyzja o kupnie konia ma być chłodna i wykalkulowana. Brzmi brutalnie? Tak właśnie jest.",
+        "status": "read"
+      }
+    ]
+  }
+  

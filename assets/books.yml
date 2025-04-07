@@ -1,0 +1,26 @@
+books:
+  - title: "Harry Potter: Cały Zbiór Powieści (1-7)"
+    author:
+      - "J.K. Rowling"
+    publishYear: 2023
+    ISBN: "9781789392487"
+    description: >
+      <p>Kiedy Harry Potter jako dziecko zostaje pozostawiony na progu, nie miał pojęcia, że jest Chłopcem, Który Przeżył, ani że jest sławny w całym świecie czarodziejstwa. Kiedy kilka lat później otrzymuje list ze Szkoły Magii i Czarodziejstwa w Hogwarcie, jest zaskoczony i wkrótce rozpoczyna magiczną przygodę, jakiej jeszcze nie było. Dołącz do Harry'ego i jego prawdziwie lojalnych przyjaciół, Hermiony i Rona, w historii o mocy prawdy, miłości i nadziei.<br><br>Stając się klasyką naszych czasów, eBooki o Harrym Potterze nigdy nie zawiodą i przynoszą pocieszenie i upragnioną ucieczkę. Ich przesłanie o nadziei, przynależności i trwałej potędze prawdy i miłości, historia Chłopca, Który Przeżył, dalej zachwyca pokolenia nowych czytelników.</p>
+    status: reading
+
+  - title: "Lalka"
+    author:
+      - "Bolesław Prus"
+    publishYear: 2024
+    ISBN: "9788379915576"
+    description: "Nieśmiertelny klasyk literatury w nowoczesnej formie ebooka. Pobierz go już dziś na swój podręczny czytnik i ciesz się lekturą!"
+    status: to-read
+
+  - title: "Mój Pierwszy Koń"
+    author:
+      - "Paweł Radwan"
+    publishYear: 2019
+    ISBN: ""
+    description: >
+      Zbyt dużo na tym świecie jest niewłaściwych koni w rękach nieodpowiednich właścicieli. [...] Brzmi brutalnie? Tak właśnie jest.
+    status: read
