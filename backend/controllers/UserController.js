@@ -198,6 +198,139 @@ const verifyToken = async (req, res) => {
   }
 };
 
+// @desc    Wyszukaj użytkowników
+// @route   GET /api/users/search/:query
+// @access  Private
+const searchUsers = async (req, res) => {
+  try {
+    const query = req.params.query;
+    const users = await User.find({
+      email: { $regex: query, $options: 'i' },
+      _id: { $ne: req.user.id } // Wyklucz aktualnego użytkownika
+    }).select('-password');
+    
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+// @desc    Dodaj znajomego
+// @route   POST /api/users/friends/:friendId
+// @access  Private
+const addFriend = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const friendId = req.params.friendId;
+    
+    // Sprawdź czy użytkownik istnieje
+    const friend = await User.findById(friendId);
+    if (!friend) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    // Dodaj znajomego jeśli jeszcze nie jest znajomym
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { $addToSet: { friends: friendId } }, // $addToSet zapobiega duplikatom
+      { new: true }
+    ).populate('friends', 'email');
+    
+    res.json(user.friends);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+// @desc    Pobierz listę znajomych
+// @route   GET /api/users/friends
+// @access  Private
+const getFriends = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id)
+      .populate('friends', 'email');
+    
+    res.json(user.friends);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+// @desc    Pobierz książki znajomego
+// @route   GET /api/users/friends/:friendId/books
+// @access  Private
+const getFriendBooks = async (req, res) => {
+  try {
+    const friendId = req.params.friendId;
+    
+    // Sprawdź czy to znajomy
+    const user = await User.findById(req.user.id);
+    if (!user.friends.includes(friendId)) {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+    
+    const books = await Book.find({ userId: friendId });
+    res.json(books);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+// controllers/UserController.js
+// @desc    Usuń znajomego
+// @route   DELETE /api/users/friends/:friendId
+// @access  Private
+const removeFriend = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const friendId = req.params.friendId;
+    
+    // Sprawdź czy użytkownik istnieje
+    const friend = await User.findById(friendId);
+    if (!friend) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    // Usuń znajomego z listy
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { $pull: { friends: friendId } }, // $pull usuwa element z tablicy
+      { new: true }
+    ).populate('friends', 'email');
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    res.json(user.friends);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+// In UserController.js
+const getUserById = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).select('-password');
+    
+    if (user) {
+      res.json(user);
+    } else {
+      res.status(404).json({ message: 'User not found' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+// Add this to your module.exports
+
 // Dodaj ten endpoint do eksportowanych funkcji:
 module.exports = {
   registerUser,
@@ -207,5 +340,11 @@ module.exports = {
   getLoggedInUsers,
   deleteUser,
   updateUser,
-  verifyToken
+  verifyToken,
+  searchUsers,
+  addFriend,
+  getFriends,
+  getFriendBooks,
+  removeFriend,
+  getUserById
 };

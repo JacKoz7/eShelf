@@ -14,6 +14,8 @@ import EditBook from "./pages/EditBook";
 import axios from "axios";
 import "./App.css";
 import UserBooks from "./pages/UserBooks";
+import FriendList from "./pages/FriendList";
+import FriendBooks from "./pages/FriendBooks";
 
 // Stworzenie kontekstu autoryzacji
 export const AuthContext = createContext({});
@@ -121,6 +123,18 @@ function AppContent() {
             >
               Moje książki
             </NavLink>
+            <NavLink
+              to="/friendlist"
+              className={({ isActive }) =>
+                `text-sm font-medium ${
+                  isActive
+                    ? "text-black underline"
+                    : "text-gray-600 hover:text-black"
+                }`
+              }
+            >
+              Znajomi
+            </NavLink>
           </div>
           <button
             onClick={handleLogout}
@@ -159,6 +173,16 @@ function AppContent() {
         <Route
           path="/edit-book/:id"
           element={authState.status ? <EditBook /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/friendlist"
+          element={authState.status ? <FriendList /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/friend-books/:friendId"
+          element={
+            authState.status ? <FriendBooks /> : <Navigate to="/login" />
+          }
         />
         <Route path="/dashboard" element={<Dashboard />} />
       </Routes>

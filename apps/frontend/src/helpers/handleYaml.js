@@ -1,4 +1,4 @@
-import * as yaml from 'yaml'; // 
+import * as yaml from 'yaml';  
 
 export const parseBookYaml = (yamlString) => {
   try {

@@ -4,7 +4,6 @@ export const parseBookXml = (xmlString) => {
       const xmlDoc = parser.parseFromString(xmlString, "text/xml");
       const books = [];
   
-      // Sprawdź czy parsowanie się powiodło
       const parserError = xmlDoc.getElementsByTagName("parsererror");
       if (parserError.length > 0) {
         throw new Error('Nieprawidłowy format pliku XML');
