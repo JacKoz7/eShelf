@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:tns="http://example.com/bookService"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    name="BookService"
+    targetNamespace="http://example.com/bookService">
+    <!-- Definicja typów danych -->
+    <types>
+        <xsd:schema targetNamespace="http://example.com/bookService">
+            <xsd:element name="AddBookRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="title" type="xsd:string" />
+                        <xsd:element name="author" type="xsd:string" maxOccurs="unbounded" />
+                        <xsd:element name="publishYear" type="xsd:int" minOccurs="0" />
+                        <xsd:element name="ISBN" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="description" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="status" type="xsd:string" minOccurs="0" />
+                        <xsd:element name="userId" type="xsd:string" />
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="AddBookResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="book" type="tns:Book" />
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:complexType name="Book">
+                <xsd:sequence>
+                    <xsd:element name="id" type="xsd:string" />
+                    <xsd:element name="title" type="xsd:string" />
+                    <xsd:element name="author" type="xsd:string" maxOccurs="unbounded" />
+                    <xsd:element name="publishYear" type="xsd:int" minOccurs="0" />
+                    <xsd:element name="ISBN" type="xsd:string" minOccurs="0" />
+                    <xsd:element name="description" type="xsd:string" minOccurs="0" />
+                    <xsd:element name="status" type="xsd:string" />
+                    <xsd:element name="userId" type="xsd:string" />
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:schema>
+    </types>
+    <!-- Definicja komunikatów -->
+    <message name="AddBookRequest">
+        <part name="parameters" element="tns:AddBookRequest" />
+    </message>
+    <message name="AddBookResponse">
+        <part name="parameters" element="tns:AddBookResponse" />
+    </message>
+    <!-- Definicja portu -->
+    <portType name="BookServicePortType">
+        <operation name="AddBook">
+            <input message="tns:AddBookRequest" />
+            <output message="tns:AddBookResponse" />
+        </operation>
+    </portType>
+    <!-- Binding -->
+    <binding name="BookServiceBinding" type="tns:BookServicePortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+        <operation name="AddBook">
+            <soap:operation soapAction="http://example.com/bookService/AddBook" />
+            <input>
+                <soap:body use="literal" />
+            </input>
+            <output>
+                <soap:body use="literal" />
+            </output>
+        </operation>
+    </binding>
+    <!-- Definicja serwisu -->
+    <service name="BookService">
+        <port name="BookServicePort" binding="tns:BookServiceBinding">
+            <soap:address location="http://localhost:3001/soap" />
+        </port>
+    </service>
+</definitions>

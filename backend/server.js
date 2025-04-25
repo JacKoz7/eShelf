@@ -1,7 +1,8 @@
-const express = require("express");
-const cors = require("cors");
-const dotenv = require("dotenv");
-const connectDB = require("./config/db");
+const express = require('express');
+const cors = require('cors');
+const dotenv = require('dotenv');
+const connectDB = require('./config/db');
+const { startSoapServer } = require('./services/BookSoapService');
 
 // Załaduj zmienne środowiskowe
 dotenv.config();
@@ -18,12 +19,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Definicja routes
-app.use("/api/users", require("./routes/UserRoutes"));
-app.use('/api/books', require("./routes/BookRoutes"));
+app.use('/api/users', require('./routes/UserRoutes'));
+app.use('/api/books', require('./routes/BookRoutes'));
+
+// Uruchom serwer SOAP
+startSoapServer(app);
 
 // Route do testowania
-app.get("/", (req, res) => {
-  res.send("API is running...");
+app.get('/', (req, res) => {
+  res.send('API is running...');
 });
 
 // Port i uruchomienie serwera

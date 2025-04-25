@@ -37,6 +37,10 @@
 - Export your friends' libraries to `.json`, `.xml`, or `.yaml` formats.
 - Remove friends at any time.
 
+### 📡 SOAP Service
+- SOAP endpoint available at `/soap` (WSDL: `http://localhost:3001/soap?wsdl`).
+- Supports operations: `AddBook` (only on backend).
+
 ---
 
 ## 📄 Project Requirements Checklist
@@ -47,7 +51,7 @@
 | Export/Import (JSON/YAML) | ✅ |
 | Export/Import from DB | ✅ |
 | ORM usage (Mongoose) | ✅ |
-| SOAP service integration | ❌ (planned) |
+| SOAP service integration | ✅ |
 | REST API integration | ✅ |
 | Dockerized deployment | ✅ |
 | JWT-based auth | ✅ |
@@ -65,7 +69,7 @@
 - MongoDB + Mongoose
 - JWT + bcryptjs for auth
 - Axios (REST communication)
-- Optional: `soap` package for future SOAP services
+- `soap` package for SOAP services
 
 ### Frontend:
 - React
