@@ -1,159 +1,112 @@
-# eShelf
+# eShelf 📚
 
-eShelf is a web application that allows users to manage their book collections. Users can add, edit, delete, and search for books through a REST API integration with Google Books. The application supports user authentication and authorization using JWT tokens and provides functionalities for importing and exporting book data in JSON, XML, and YAML formats.
+**eShelf** is your personal digital bookshelf — an all-in-one platform to manage your book collection with ease. Log in, add books, edit them, export/import in multiple formats, and even search the Google Books API directly from your dashboard.
 
-## Table of Contents
-- [Features](#features)
-- [Getting Started](#getting-started)
-- [Installation](#installation)
-- [Usage](#usage)
-- [API Endpoints](#api-endpoints)
-- [Database Schema](#database-schema)
-- [Dependencies](#dependencies)
-- [Contributing](#contributing)
-- [License](#license)
+---
 
-## Features
+## 🚀 Features
 
-- User authentication and authorization using JWT tokens
-- Add books manually or search and add from Google Books API
-- Manage book collection (CRUD operations)
-- Import and export book data in JSON, XML, and YAML formats
-- Integration with MongoDB for data storage
-- REST API architecture
-- Docker support for containerized deployment
+### 🔐 Authentication & Authorization
+- Secure registration and login with hashed passwords.
+- JWT-based authentication for secure access to protected routes.
 
-## Getting Started
+### 📂 Book Management
+- Add books manually via form: title, author, year, ISBN, description, status (`read`, `reading`, `to-read`).
+- Import books from `.json`, `.xml`, or `.yaml` files.
+- Search and add books via the Google Books REST API.
+- View and manage your collection: update details, delete entries.
+- Export collection to `.json`, `.xml`, or `.yaml` files.
 
-### Prerequisites
-- Node.js
-- npm
-- Docker (optional, for containerized deployment)
+### 🏢 App Structure
+- **Dashboard**: Add new books and search via Google Books.
+- **My Books**: View, edit, delete or export your collection.
+- **Friends**: Add or remove friends, view their books, and export their collections.
+- **Login/Register**: Simple, secure, and fast onboarding.
 
-### Installation
+### 📞 Tech Highlights
+- MongoDB-powered backend with Mongoose ORM.
+- RESTful API architecture.
+- Dockerized frontend & backend.
+- Book CRUD operations fully protected by JWT.
+- Form validation on both frontend and backend.
+- Ready for SOAP integration.
 
-1. Clone the repository:
-   ```sh
-   git clone https://github.com/JacKoz7/eShelf.git
-   cd eShelf
-   ```
+### 👥 Friends 
+- Add friends by their unique email address.
+- Browse your friends' book collections.
+- Export your friends' libraries to `.json`, `.xml`, or `.yaml` formats.
+- Remove friends at any time.
 
-2. Install dependencies for both frontend and backend:
-   ```sh
-   # Backend
-   cd backend
-   npm install
+---
 
-   # Frontend
-   cd ../apps/frontend
-   npm install
-   ```
+## 📄 Project Requirements Checklist
 
-3. Set up environment variables:
-   - Create a `.env` file in the `backend` directory with the following variables:
-     ```env
-     MONGO_URI=<Your MongoDB URI>
-     JWT_SECRET=<Your JWT Secret>
-     ```
+| Feature | Status |
+|--------|--------|
+| Export/Import (XML) | ✅ |
+| Export/Import (JSON/YAML) | ✅ |
+| Export/Import from DB | ✅ |
+| ORM usage (Mongoose) | ✅ |
+| SOAP service integration | ❌ (planned) |
+| REST API integration | ✅ |
+| Dockerized deployment | ✅ |
+| JWT-based auth | ✅ |
+| MongoDB + CRUD operations | ✅ |
+| Password hashing & secure routes | ✅ |
+| Client/server-side form validation | ✅ |
+| Isolation levels in DB | ❌ (planned) |
 
-### Usage
+---
 
-#### Running the Application
+## 🛠️ Tech Stack
 
-To run both frontend and backend simultaneously using Docker:
-```sh
+### Backend:
+- Node.js + Express
+- MongoDB + Mongoose
+- JWT + bcryptjs for auth
+- Axios (REST communication)
+- Optional: `soap` package for future SOAP services
+
+### Frontend:
+- React
+- Formik + Yup (form handling & validation)
+- Axios (API calls)
+- jwt-decode + js-cookie (auth management)
+- Tailwind CSS + React Toastify (styling + notifications)
+
+---
+
+## 🔧 How to Run the Project
+
+1. **Start all services using Docker:**
+```bash
 docker-compose up --build
 ```
-To remove old containers and volumes:
-```sh
-docker-compose down -v
+
+2. **Remove old containers:**
+```bash
+docker-compose down 
 ```
 
-Alternatively, you can run the frontend and backend separately:
+---
 
-1. Start the backend server:
-   ```sh
-   cd backend
-   npm run dev
-   ```
+## 📁 Assets & Test Data
 
-2. Start the frontend server:
-   ```sh
-   cd ../apps/frontend
-   npm start
-   ```
+Sample data is located in the `assets` folder:
+- `books.json`
+- `books.xml`
+- `books.yml`
 
-## API Endpoints
+You can use these to test import/export features.
 
-### User Endpoints
-- `POST /register`: Register a new user
-- `POST /login`: Login and obtain a JWT token
-- `GET /users`: Get all users (requires token)
-- `GET /users/logged_in`: Get logged-in users (requires token)
-- `PATCH /users/:id`: Edit user data (requires token)
-- `DELETE /users/:id`: Delete a user (requires token)
-- `POST /logout`: Logout user (requires token)
+---
 
-### Book Endpoints
-- `POST /books`: Add a new book (requires token)
-- `GET /books`: Get all books
-- `GET /books/user/:userId`: Get books of a specific user
-- `GET /books/me`: Get books of the logged-in user (requires token)
-- `GET /books/:id`: Get a single book
-- `PATCH /books/:id`: Update a book (requires token)
-- `DELETE /books/:id`: Delete a book (requires token)
-- `GET /books/search`: Search books using Google Books API
-- `POST /books/import`: Import books from JSON, XML, or YAML
-- `POST /books/export`: Export books to JSON, XML, or YAML
+## 🚫 Logout Anytime
 
-## Database Schema
+Simply click the logout button on any page to securely exit your session. JWTs are cleared and access is revoked.
 
-### User Collection
-- `id`: Unique identifier
-- `email`: User's email address
-- `password`: Hashed password
-- `isLoggedIn`: User's login status
-- `createdAt`: Account creation date
-- `updatedAt`: Last update date
+---
 
-### Book Collection
-- `userId`: ID of the user who owns the book
-- `title`: Title of the book
-- `author`: Author of the book
-- `publishYear`: Year of publication
-- `ISBN`: ISBN number
-- `description`: Book description
-- `status`: Reading status (enum: ['read', 'reading', 'to-read'])
+## ✨ Author
+Created by **Jacek Kozłowski** ☕️
 
-## Dependencies
-
-### Backend
-- `express`
-- `bcryptjs`
-- `cors`
-- `dotenv`
-- `soap`
-- `axios`
-- `mongoose`
-- `jsonwebtoken`
-- `nodemon` (dev dependency)
-
-### Frontend
-- `axios`
-- `react-router-dom`
-- `formik`
-- `yup`
-- `jwt-decode`
-- `js-cookie`
-- `tailwindcss`
-- `postcss`
-- `autoprefixer`
-- `react-toastify`
-
-## Contributing
-
-Contributions are welcome! Please fork the repository and submit a pull request.
-
-## License
-
-This project is licensed under the MIT License.

@@ -27,11 +27,11 @@ services:
     stdin_open: true                   
     tty: true             
   db:
-    image: mongo
+    image: mongo:8.0
     container_name: mongo_db
     restart: always
     ports:
-      - "27017:27017"
+      - "27018:27017"
     volumes:
       - mongo_data:/data/db
 

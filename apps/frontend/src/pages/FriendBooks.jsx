@@ -3,25 +3,27 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useParams, useNavigate } from "react-router-dom";
-
-const stripHtml = (html) => {
-  const tmp = document.createElement("div");
-  tmp.innerHTML = html;
-  return tmp.textContent || tmp.innerText || "";
-};
+import {
+  stripHtml,
+  getStatusText,
+  getStatusColor,
+  exportToJson,
+  exportToXml,
+  exportToYaml,
+} from "../utils/bookUtils";
 
 function FriendBooks() {
   const { friendId } = useParams();
   const [books, setBooks] = useState([]);
   const [friendEmail, setFriendEmail] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [isExporting, setIsExporting] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchFriendBooks = async () => {
       setIsLoading(true);
       try {
-        // Pobierz dane znajomego
         const friendResponse = await axios.get(
           `http://localhost:3001/api/users/${friendId}`,
           {
@@ -32,7 +34,6 @@ function FriendBooks() {
         );
         setFriendEmail(friendResponse.data.email);
 
-        // Pobierz książki znajomego
         const booksResponse = await axios.get(
           `http://localhost:3001/api/users/friends/${friendId}/books`,
           {
@@ -53,32 +54,6 @@ function FriendBooks() {
 
     fetchFriendBooks();
   }, [friendId, navigate]);
-
-  const getStatusText = (status) => {
-    switch (status) {
-      case "to-read":
-        return "Do przeczytania";
-      case "reading":
-        return "W trakcie czytania";
-      case "read":
-        return "Przeczytana";
-      default:
-        return status;
-    }
-  };
-
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "to-read":
-        return "bg-yellow-100 text-yellow-800";
-      case "reading":
-        return "bg-blue-100 text-blue-800";
-      case "read":
-        return "bg-green-100 text-green-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
 
   return (
     <div className="min-h-screen bg-white py-10 px-4 sm:px-6 lg:px-8">
@@ -107,52 +82,89 @@ function FriendBooks() {
             </p>
           </div>
         ) : (
-          <div className="space-y-6">
-            {books.map((book) => (
-              <div
-                key={book._id}
-                className="border border-gray-200 rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow"
-              >
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h2 className="text-xl font-semibold text-gray-900">
-                      {book.title}
-                    </h2>
-                    <p className="text-gray-600 mt-1">
-                      Autor:{" "}
-                      {Array.isArray(book.author)
-                        ? book.author.join(", ")
-                        : book.author}
-                    </p>
-                    {book.publishYear && (
+          <>
+            <div className="space-y-6">
+              {books.map((book) => (
+                <div
+                  key={book._id}
+                  className="border border-gray-200 rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow"
+                >
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h2 className="text-xl font-semibold text-gray-900">
+                        {book.title}
+                      </h2>
                       <p className="text-gray-600 mt-1">
-                        Rok wydania: {book.publishYear}
+                        Autor:{" "}
+                        {Array.isArray(book.author)
+                          ? book.author.join(", ")
+                          : book.author}
                       </p>
-                    )}
-                    {book.ISBN && (
-                      <p className="text-gray-600 mt-1">ISBN: {book.ISBN}</p>
-                    )}
+                      {book.publishYear && (
+                        <p className="text-gray-600 mt-1">
+                          Rok wydania: {book.publishYear}
+                        </p>
+                      )}
+                      {book.ISBN && (
+                        <p className="text-gray-600 mt-1">ISBN: {book.ISBN}</p>
+                      )}
+                    </div>
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                        book.status
+                      )}`}
+                    >
+                      {getStatusText(book.status)}
+                    </span>
                   </div>
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
-                      book.status
-                    )}`}
-                  >
-                    {getStatusText(book.status)}
-                  </span>
-                </div>
 
-                {book.description && (
-                  <div className="mt-4">
-                    <h3 className="text-sm font-medium text-gray-900">Opis</h3>
-                    <p className="text-gray-600 mt-1">
-                      {stripHtml(book.description)}
-                    </p>
-                  </div>
-                )}
+                  {book.description && (
+                    <div className="mt-4">
+                      <h3 className="text-sm font-medium text-gray-900">Opis</h3>
+                      <p className="text-gray-600 mt-1">
+                        {stripHtml(book.description)}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-12 pt-6 border-t border-gray-200">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4 text-center">
+                Eksportuj kolekcję znajomego
+              </h2>
+              <div className="flex flex-col md:flex-row gap-3 justify-center">
+                <button
+                  onClick={() =>
+                    exportToJson(books, `${friendEmail}_books.json`, setIsExporting)
+                  }
+                  disabled={isExporting}
+                  className="px-4 py-2 bg-gray-100 text-black border border-gray-300 rounded-md hover:bg-gray-200 disabled:opacity-50"
+                >
+                  {isExporting ? "Eksportowanie..." : "Do pliku JSON"}
+                </button>
+                <button
+                  onClick={() =>
+                    exportToXml(books, `${friendEmail}_books.xml`, setIsExporting)
+                  }
+                  disabled={isExporting}
+                  className="px-4 py-2 bg-gray-100 text-black border border-gray-300 rounded-md hover:bg-gray-200 disabled:opacity-50"
+                >
+                  {isExporting ? "Eksportowanie..." : "Do pliku XML"}
+                </button>
+                <button
+                  onClick={() =>
+                    exportToYaml(books, `${friendEmail}_books.yml`, setIsExporting)
+                  }
+                  disabled={isExporting}
+                  className="px-4 py-2 bg-gray-100 text-black border border-gray-300 rounded-md hover:bg-gray-200 disabled:opacity-50"
+                >
+                  {isExporting ? "Eksportowanie..." : "Do pliku YAML"}
+                </button>
               </div>
-            ))}
-          </div>
+            </div>
+          </>
         )}
       </div>
     </div>
