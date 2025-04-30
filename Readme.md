@@ -111,6 +111,20 @@ Simply click the logout button on any page to securely exit your session. JWTs a
 
 ---
 
+## Screenshots
+
+<table>
+
+  <tr>
+    <td><img width="1470" alt="eShelf login" src="https://github.com/user-attachments/assets/070d83fd-232d-499a-9ab6-47d13bf81ccb" /></td>
+    <td><img width="1470" alt="eShelf Dashboard" src="https://github.com/user-attachments/assets/0502c428-67ae-4d4c-8314-037b7b4354bb" /></td>
+  </tr>
+  <tr>
+    <td><img width="1470" alt="eShelf books import" src="https://github.com/user-attachments/assets/0c98dbc8-f1b9-4045-9283-cc9f43410b6d" /></td>
+    <td><img width="1470" alt="eShelf my books" src="https://github.com/user-attachments/assets/59d61ebf-508a-4ec5-8cad-0ca5a88db31b" /></td>
+  </tr>
+</table>
+
 ## ✨ Author
 Created by **Jacek Kozłowski** ☕️
 
